@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Twilio Candle Stick</title>
+<script type="text/javascript" src="d3.js"></script>
+<link rel="stylesheet" href="styles.css" type="text/css">
+
+  <script type="text/javascript"> const drawCandle = (data) => {
+    console.log(data);
+    let result = data.map(a => a.date)
+    let w = 1200;
+    let h = 200;
+    let margin = 20;
+
+    let xScale = d3.scaleBand()
+      // .domain([d3.min(data, (d) => d.date), d3.max(data, (d) => d.date)])
+      // .domain([d3.min(result), d3.max(result)])
+      .domain(d3.range(data.length))
+      .rangeRound([0 + margin, w - margin])
+      .paddingInner(0.05)
+      console.log(xScale(1));
+
+    let yScale = d3.scaleLinear()
+      .domain(d3.extent(data, (d) => d.volume))
+      .range([h - margin, margin])
+      console.log("HIGH", d3.max(data, (d) => d.volume));
+      console.log("LOW", yScale(d3.min(data, (d) => d.volume)));
+
+    // let barWidth = xScale.rangeBand()
+
+    let xAxis = d3.axisBottom()
+      .scale(xScale)
+      .ticks(5)
+
+    let yAxis = d3.axisRight()
+      .scale(yScale)
+      .ticks(10)
+
+    let svg = d3.select("body")
+      .append("svg")
+      .attr("width", w)
+      .attr("height", h)
+
+    svg.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", (d, i) => xScale(data.length - i - 1))
+      .attr("y", (d) => yScale(d.volume))
+      .attr("width", xScale.bandwidth())
+      .attr("height", (d) => h - yScale(d.volume))
+      .attr("fill", "#aaaaaa")
+      .attr("stroke", "black")
+      .attr("stroke-width", .25)
+
+    }
+  </script>
+
+  <script type="text/javascript"> const convert = (data) => {
+        data.forEach((d) => {
+          d["date"] = new Date(d["date"]);
+          d["open"] = +d["open"];
+          d["high"] = +d["high"];
+          d["low"] = +d["low"];
+          d["close"] = +d["close"];
+          d["adjClose"] = +d["adjClose"];
+          d["volume"] = +d["volume"];
+        })
+      return data;
+      }
+  </script>
+</head>
+<body>
+  <div id="bod" class="moving">
+
+  </div>
+  <script>
+       d3.csv("twilio.csv").then(convert).then(drawCandle);
+  </script>
+
+</body>
+</html>

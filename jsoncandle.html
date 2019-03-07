@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Twilio Candle Stick</title>
+<script type="text/javascript" src="d3.js"></script>
+<link rel="stylesheet" href="styles.css" type="text/css">
+
+  <script type="text/javascript"> const drawCandle = (stocks) => {
+    // let stocks = [
+     // {
+     //   "date": "2019-02-06",
+     //   "open": 180.33,
+     //   "close": 182.54,
+     //   "high": 177.83,
+     //   "low": 180.57,
+     //   "volume": 29009207,
+     //   "uOpen": 179.09,
+     //   "uClose": 180.78,
+     //   "uHigh": 184.79,
+     //   "uLow": 176.66,
+     //   "uVolume": 28989951,
+     //   "change": 0,
+     //   "changePercent": 0,
+     //   "label": "Feb 6",
+     //   "changeOverTime": 0
+     // },
+     // {
+     //   "date": "2019-02-07",
+     //   "open": 179,
+     //   "close": 179.38,
+     //   "high": 174.19,
+     //   "low": 175.32,
+     //   "volume": 32147943,
+     //   "uOpen": 176.4,
+     //   "uClose": 171.84,
+     //   "uHigh": 175.73,
+     //   "uLow": 172.56,
+     //   "uVolume": 32018708,
+     //   "change": -3.4,
+     //   "changePercent": -1.9128,
+     //   "label": "Feb 7",
+     //   "changeOverTime": -0.019758
+     // },
+     // {
+     //   "date": "2019-02-08",
+     //   "open": 169.13,
+     //   "close": 178.45,
+     //   "high": 175.67,
+     //   "low": 174.03,
+     //   "volume": 23863019,
+     //   "uOpen": 176.98,
+     //   "uClose": 171.94,
+     //   "uHigh": 173.98,
+     //   "uLow": 169.88,
+     //   "uVolume": 24697254,
+     //   "change": -0.55,
+     //   "changePercent": -0.3166,
+     //   "label": "Feb 8",
+     //   "changeOverTime": -0.022276
+     // },
+     // {
+     //   "date": "2019-02-11",
+     //   "open": 175.54,
+     //   "close": 176.29,
+     //   "high": 176.27,
+     //   "low": 170.75,
+     //   "volume": 21562880,
+     //   "uOpen": 176.02,
+     //   "uClose": 176.97,
+     //   "uHigh": 177.04,
+     //   "uLow": 172.37,
+     //   "uVolume": 21882293,
+     //   "change": -1,
+     //   "changePercent": -0.5966,
+     //   "label": "Feb 11",
+     //   "changeOverTime": -0.028404
+     // },
+     // {
+     //   "date": "2019-02-12",
+     //   "open": 170.7,
+     //   "close": 172.41,
+     //   "high": 175,
+     //   "low": 170.1,
+     //   "volume": 22946401,
+     //   "uOpen": 173.1,
+     //   "uClose": 175.59,
+     //   "uHigh": 176,
+     //   "uLow": 171.9,
+     //   "uVolume": 22873450,
+     //   "change": 1.49,
+     //   "changePercent": 0.8679,
+     //   "label": "Feb 12",
+     //   "changeOverTime": -0.01937
+     // },
+     // {
+     //   "date": "2019-02-13",
+     //   "open": 172.55,
+     //   "close": 173.66,
+     //   "high": 173.47,
+     //   "low": 177.06,
+     //   "volume": 23168238,
+     //   "uOpen": 175.51,
+     //   "uClose": 178.84,
+     //   "uHigh": 179.31,
+     //   "uLow": 170.35,
+     //   "uVolume": 22517791,
+     //   "change": -0.73,
+     //   "changePercent": -0.4319,
+     //   "label": "Feb 13",
+     //   "changeOverTime": -0.023683
+     // },
+     // {
+     //   "date": "2019-02-14",
+     //   "open": 172.69,
+     //   "close": 172.5,
+     //   "high": 171.35,
+     //   "low": 174.65,
+     //   "volume": 22383670,
+     //   "uOpen": 178.18,
+     //   "uClose": 173.5,
+     //   "uHigh": 179.9,
+     //   "uLow": 172.56,
+     //   "uVolume": 22362652,
+     //   "change": 0.64,
+     //   "changePercent": 0.3756,
+     //   "label": "Feb 14",
+     //   "changeOverTime": -0.019809
+     // },
+     // {
+     //   "date": "2019-02-15",
+     //   "open": 174.96,
+     //   "close": 174.77,
+     //   "high": 177.7,
+     //   "low": 173.09,
+     //   "volume": 25834154,
+     //   "uOpen": 174.83,
+     //   "uClose": 173.94,
+     //   "uHigh": 179.4,
+     //   "uLow": 171.4,
+     //   "uVolume": 25434404,
+     //   "change": -0.38,
+     //   "changePercent": -0.2237,
+     //   "label": "Feb 15",
+     //   "changeOverTime": -0.022566
+     // },
+     // {
+     //   "date": "2019-02-19",
+     //   "open": 170.12,
+     //   "close": 172.84,
+     //   "high": 178.29,
+     //   "low": 174.94,
+     //   "volume": 19004700,
+     //   "uOpen": 176.62,
+     //   "uClose": 173.53,
+     //   "uHigh": 177.16,
+     //   "uLow": 172.37,
+     //   "uVolume": 19869093,
+     //   "change": 0.52,
+     //   "changePercent": 0.3128,
+     //   "label": "Feb 19",
+     //   "changeOverTime": -0.019621
+     // },
+     // {
+     //   "date": "2019-02-20",
+     //   "open": 175.78,
+     //   "close": 179.42,
+     //   "high": 173.55,
+     //   "low": 175.58,
+     //   "volume": 26942440,
+     //   "uOpen": 174.94,
+     //   "uClose": 177.1,
+     //   "uHigh": 179.97,
+     //   "uLow": 173.48,
+     //   "uVolume": 26907219,
+     //   "change": 1.1,
+     //   "changePercent": 0.6723,
+     //   "label": "Feb 20",
+     //   "changeOverTime": -0.012953
+     // },
+     // {
+     //   "date": "2019-02-21",
+     //   "open": 175.4,
+     //   "close": 177.3,
+     //   "high": 177.84,
+     //   "low": 178.5,
+     //   "volume": 17367229,
+     //   "uOpen": 179.1,
+     //   "uClose": 173.54,
+     //   "uHigh": 180.76,
+     //   "uLow": 170.6,
+     //   "uVolume": 17627754,
+     //   "change": -0.99,
+     //   "changePercent": -0.5833,
+     //   "label": "Feb 21",
+     //   "changeOverTime": -0.01888
+     // },
+     // {
+     //   "date": "2019-02-22",
+     //   "open": 173.22,
+     //   "close": 175.77,
+     //   "high": 174,
+     //   "low": 178.41,
+     //   "volume": 19074916,
+     //   "uOpen": 174.15,
+     //   "uClose": 180.2,
+     //   "uHigh": 183,
+     //   "uLow": 173.35,
+     //   "uVolume": 19745635,
+     //   "change": 1.98,
+     //   "changePercent": 1.1591,
+     //   "label": "Feb 22",
+     //   "changeOverTime": -0.00758
+     // },
+     // {
+     //   "date": "2019-02-25",
+     //   "open": 174.61,
+     //   "close": 177.4,
+     //   "high": 176.45,
+     //   "low": 177.06,
+     //   "volume": 22355428,
+     //   "uOpen": 178.37,
+     //   "uClose": 182.17,
+     //   "uHigh": 184.36,
+     //   "uLow": 174.87,
+     //   "uVolume": 22761680,
+     //   "change": 1.29,
+     //   "changePercent": 0.7524,
+     //   "label": "Feb 25",
+     //   "changeOverTime": -0.000059
+     // },
+     // {
+     //   "date": "2019-02-26",
+     //   "open": 176.59,
+     //   "close": 181.35,
+     //   "high": 181.7,
+     //   "low": 181.78,
+     //   "volume": 17787448,
+     //   "uOpen": 179.8,
+     //   "uClose": 177.78,
+     //   "uHigh": 180.8,
+     //   "uLow": 176.36,
+     //   "uVolume": 17131362,
+     //   "change": 0.1,
+     //   "changePercent": 0.0574,
+     //   "label": "Feb 26",
+     //   "changeOverTime": 0.000518
+     // },
+     // {
+     //   "date": "2019-02-27",
+     //   "open": 178.7,
+     //   "close": 177.64,
+     //   "high": 181,
+     //   "low": 173.53,
+     //   "volume": 28889547,
+     //   "uOpen": 181.51,
+     //   "uClose": 182.24,
+     //   "uHigh": 183,
+     //   "uLow": 177.58,
+     //   "uVolume": 27934122,
+     //   "change": 0.54,
+     //   "changePercent": 0.3241,
+     //   "label": "Feb 27",
+     //   "changeOverTime": 0.003681
+     // },
+     // {
+     //   "date": "2019-02-28",
+     //   "open": 179.83,
+     //   "close": 174.83,
+     //   "high": 176.13,
+     //   "low": 179.49,
+     //   "volume": 28776775,
+     //   "uOpen": 178,
+     //   "uClose": 176.61,
+     //   "uHigh": 180.78,
+     //   "uLow": 175,
+     //   "uVolume": 29402590,
+     //   "change": -1.73,
+     //   "changePercent": -1.0001,
+     //   "label": "Feb 28",
+     //   "changeOverTime": -0.006489
+     // },
+     // {
+     //   "date": "2019-03-01",
+     //   "open": 177.44,
+     //   "close": 179.44,
+     //   "high": 179.66,
+     //   "low": 174.59,
+     //   "volume": 26738456,
+     //   "uOpen": 177.41,
+     //   "uClose": 183.59,
+     //   "uHigh": 185.4,
+     //   "uLow": 176.3,
+     //   "uVolume": 25955132,
+     //   "change": 1.86,
+     //   "changePercent": 1.0666,
+     //   "label": "Mar 1",
+     //   "changeOverTime": 0.0042
+     // },
+     // {
+     //   "date": "2019-03-04",
+     //   "open": 183.93,
+     //   "close": 176.52,
+     //   "high": 180.27,
+     //   "low": 174.68,
+     //   "volume": 27806501,
+     //   "uOpen": 180.32,
+     //   "uClose": 181.91,
+     //   "uHigh": 183.96,
+     //   "uLow": 178.95,
+     //   "uVolume": 27639015,
+     //   "change": 0.91,
+     //   "changePercent": 0.5211,
+     //   "label": "Mar 4",
+     //   "changeOverTime": 0.00942
+     // },
+     // {
+     //   "date": "2019-03-05",
+     //   "open": 179.84,
+     //   "close": 181.85,
+     //   "high": 177,
+     //   "low": 175.08,
+     //   "volume": 20431965,
+     //   "uOpen": 181.71,
+     //   "uClose": 183.11,
+     //   "uHigh": 185,
+     //   "uLow": 177.93,
+     //   "uVolume": 20253283,
+     //   "change": -0.32,
+     //   "changePercent": -0.19,
+     //   "label": "Mar 5",
+     //   "changeOverTime": 0.007654
+     // }
+     // ]
+    console.log("DATA", stocks);
+    let result = stocks.map(a => a.date)
+    console.log("RESULT", result);
+    let w = 1200;
+    let h = 450;
+    let margin = 40;
+
+    let xScale = d3.scaleBand()
+      // .domain([d3.min(stocks, (d) => d.date), d3.max(stocks, (d) => d.date)])
+      // .domain([d3.min(result), d3.max(result)])
+      .domain(d3.range(stocks.length))
+      .rangeRound([0 + margin, w - margin])
+      .paddingInner(0.1)
+      console.log(xScale(1));
+
+    let yScale = d3.scaleLinear()
+      .domain([d3.min(stocks, (d) => d.uLow), d3.max(stocks, (d) => d.uHigh) + 5])
+      .range([h - margin, margin])
+      console.log("MIN", d3.min(stocks, (d) => d.uLow));
+      console.log("OLDEST, close", yScale(142));
+
+    // let barWidth = xScale.rangeBand()
+
+    let xAxis = d3.axisBottom()
+      .scale(xScale)
+      .ticks(5)
+
+    let yAxis = d3.axisRight()
+      .scale(yScale)
+      .ticks(10)
+
+    let svg = d3.select("#bod")
+      .append("svg")
+      .attr("width", w)
+      .attr("height", h)
+
+    svg.append("g")
+      .attr("class", "sticks")
+      .selectAll("rect")
+        .data(stocks)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => xScale(i) + xScale.bandwidth() / 2)
+        .attr("y", (d) => yScale(d.uHigh))
+        .attr("width", 1)
+        .attr("height", (d) => (Math.abs(yScale(d.uHigh) - yScale(d.uLow))))
+        .attr("fill", (d) => "green" )
+
+
+    svg.append("g")
+      .attr("class", "bands")
+      .selectAll("rect")
+        .data(stocks)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => xScale(i) + xScale.bandwidth() / 2)
+        .attr("y", (d) => {
+          if(d.uOpen > d.uClose) {
+            return yScale(d.uOpen);
+          } else {
+            return yScale(d.uClose)
+          }
+        })
+        .attr("width", 1)
+        .attr("height", (d) => (Math.abs(yScale(d.uClose) - yScale(d.uOpen))))
+        .attr("stroke", (d) => {
+          if(d.uOpen > d.uClose) {
+            return "red";
+          } else {
+            return "blue";
+          }
+        })
+        .attr("stroke-width", Math.floor(xScale.bandwidth()))
+
+    svg.append("g")
+     .attr("class", "x axis")
+     .attr("transform", "translate(0," + (h - margin/2) + ")")
+     .call(xAxis)
+
+    svg.append("g")
+       .attr("class", "y axis")
+       .attr("transform", "translate(" + (w - margin) + "," + margin / 2 + ")")
+       .call(yAxis)
+
+
+    return stocks;
+
+  }
+  </script>
+  <script type="text/javascript"> const drawBars = (data) => {
+    console.log(data);
+    let result = data.map(a => a.date)
+    let w = 1200;
+    let h = 200;
+    let margin = 20;
+
+    let xScale = d3.scaleBand()
+      // .domain([d3.min(data, (d) => d.date), d3.max(data, (d) => d.date)])
+      // .domain([d3.min(result), d3.max(result)])
+      .domain(d3.range(data.length))
+      .rangeRound([0 + margin, w - margin])
+      .paddingInner(0.05)
+      console.log(xScale(1));
+
+    let yScale = d3.scaleLinear()
+      .domain(d3.extent(data, (d) => d.uVolume))
+      .range([h - margin, margin])
+      console.log("HIGH", d3.max(data, (d) => d.uVolume));
+      console.log("LOW", yScale(d3.min(data, (d) => d.uVolume)));
+
+    // let barWidth = xScale.rangeBand()
+
+    let xAxis = d3.axisBottom()
+      .scale(xScale)
+      .ticks(5)
+
+    let yAxis = d3.axisRight()
+      .scale(yScale)
+      .ticks(10)
+
+    let svg = d3.select("#bar-bod")
+      .append("svg")
+      .attr("width", w)
+      .attr("height", h)
+
+    svg.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", (d, i) => xScale(data.length - i - 1))
+      .attr("y", (d) => yScale(d.volume))
+      .attr("width", xScale.bandwidth())
+      .attr("height", (d) => h - yScale(d.volume))
+      .attr("fill", "#aaaaaa")
+      .attr("stroke", "black")
+      .attr("stroke-width", .25)
+
+
+
+
+
+    }
+  </script>
+  <script type="text/javascript"> const convert = (data) => {
+        data.forEach((d) => {
+          d["date"] = new Date(d["date"]);
+          d["open"] = +d["open"];
+          d["high"] = +d["high"];
+          d["low"] = +d["low"];
+          d["close"] = +d["close"];
+          d["adjClose"] = +d["adjClose"];
+          d["volume"] = +d["volume"];
+        })
+      return data;
+      }
+  </script>
+</head>
+<body>
+  <div id="bod" class="moving">
+
+  </div>
+  <div id="bar-bod"></div>
+  <script>
+    d3.json("https://cloud.iexapis.com/beta/stock/aapl/chart/3m?token=" + real_token)
+    // d3.json("https://sandbox.iexapis.com/beta/stock/aapl/chart/3m?token=" + test_token)
+   .then(drawCandle).then(drawBars)
+  </script>
+
+</body>
+</html>
