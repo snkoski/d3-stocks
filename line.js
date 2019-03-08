@@ -43,8 +43,6 @@ const responsivefy = svg => {
     .call(resize)
 
   d3.select(window).on("resize." + container.attr("id"), resize)
-
-
 };
 
 const initializeChart = data => {
@@ -58,11 +56,22 @@ const initializeChart = data => {
 
   const xMin = d3.min(data, d => d["date"]);
   const xMax = d3.max(data, d => d["date"]);
-  const yMin = d3.min(data, d => d["uClose"]);
-  const yMax = d3.max(data, d => d["uClose"]);
+  const yMin = d3.min(data, d => d["uLow"]);
+  const yMax = d3.max(data, d => d["uHigh"]);
 
   const xScale = d3.scaleTime().domain([xMin, xMax]).range([0, width]);
   const yScale = d3.scaleLinear().domain([yMin - 5, yMax]).range([height, 0]);
+
+  const btn = d3.select("#avg-btn")
+
+  const input = d3.select("#avg-input")
+  console.log(input.name);
+
+
+  btn.on("click", function() {
+    alert(input)
+  })
+
 
   const svg = d3.select("#chart")
     .append("svg")
@@ -91,8 +100,6 @@ const initializeChart = data => {
     .x(d => xScale(d["date"]))
     .y(d => yScale(d["average"]))
     .curve(d3.curveBasis);
-
-  console.log("LINE", line);
 
   svg.append("path")
     .data([data])
@@ -123,6 +130,55 @@ const initializeChart = data => {
     .range([height, yScale(yMin) + 5])
     console.log(yMin);
 
+    // console.log("DATA", data)
+    // svg.append("g")
+    //   .attr("class", "bands")
+    //   .selectAll("rect")
+    //     .data(data)
+    //     .enter()
+    //     .append("rect")
+    //     // .attr("x", (d, i) => xScale(i) + xScale.bandwidth() / 2)
+    //     .attr("x", (d, i) => xScale(i))
+    //     .attr("y", (d) => {
+    //       if(d.uOpen > d.uClose) {
+    //         return yScale(d.uOpen);
+    //       } else {
+    //         return yScale(d.uClose)
+    //       }
+    //     })
+    //     .attr("width", 1)
+    //     .attr("height", (d) => (Math.abs(yScale(d.uClose) - yScale(d.uOpen))))
+    //     .attr("stroke", (d) => {
+    //       if(d.uOpen > d.uClose) {
+    //         return "red";
+    //       } else {
+    //         return "blue";
+    //       }
+    //     })
+        // .attr("stroke-width", Math.floor(xScale.bandwidth()))
+      svg.selectAll()
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", d => xScale(d["date"]))
+        .attr("y", d => {
+          if (d["uOpen"] > d["uClose"]) {
+            return yScale(d["uOpen"]);
+          } else {
+            return yScale(d["uClose"])
+          }
+        })
+        .attr("width", 1)
+        .attr("height", d => (Math.abs(yScale(d["uClose"]) - yScale(d["uOpen"]))))
+        .attr("stroke", d => {
+          if (d["uOpen"] > d["uClose"]) {
+            return "red";
+          } else {
+            return "blue";
+          }
+        })
+        .attr("stroke-width", (width / data.length) / 3)
+    console.log("WIDTH", width);
     svg.selectAll()
       .data(volData)
       .enter()
@@ -228,7 +284,5 @@ const initializeChart = data => {
       .style("fill", "white")
       .attr("transform", "translate(15,9)")
   };
-
-
 
 }

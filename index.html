@@ -7,9 +7,18 @@
 <body>
   <div class="flex-container">
     <div class="flex-item">
-      <p>Historical price chart of Vanguard Dividend Appreciation ETF(<a target="_blank" href="https://sg.finance.yahoo.com/quote/VIG/chart?p=VIG">VIG</a>), built with D3.js. Prices are displayed in United States Dollars(USD). Feel free to check out the source code at <a target="_blank" href="https://github.com/wentjun/d3-historical-price-chart-basic">GitHub</a>.</p>
     </div>
   </div>
+  <div>
+    <button id="avg8" class="avg-btn" type="button">8 Days</button>
+    <button id="avg20" class="avg-btn" type="button">20 Days</button>
+    <button id="avg50" class="avg-btn" type="button">50 Days</button>
+    <button id="avgall" class="avg-btn" type="button">All Days</button>
+    <button id="openPath" class="toggle-btn toggle-on" type="button">Hide Open</button>
+    <button id="closePath" class="toggle-btn toggle-on" type="button">Hide Close</button>
+    <button id="ohlcBtn" class="toggle-btn toggle-on" type="button">Hide OHLC</button>
+
+  </div>
   <div id="chart"></div>
-  <script src="line.js"></script>
+  <script src="all.js"></script>
 </body>
